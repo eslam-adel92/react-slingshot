@@ -9,18 +9,31 @@ jobs:
     <<: *defaults
     steps:
       - checkout
+      - run: npm i
+      - save_cache:
+          key: "npm_packages"
+          paths:
+            - "/src/node_modules"
+          key: 
       - run: npm run lint
 
   test:
     <<: *defaults
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - "npm_packages"
+      - run: npm i
       - run: npm run test
 
   analyze:
     <<: *defaults
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - "npm_packages"
       - run: npm audit
 
 # Orchestrate or schedule a set of jobs
